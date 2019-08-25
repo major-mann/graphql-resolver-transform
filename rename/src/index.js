@@ -12,6 +12,7 @@ function createTransformer(resolvers, transform) {
 
 function createTransformerIn(resolvers, transformIn) {
     return {
+        ...resolvers,
         list,
         find: wrapStandardInput(resolvers.find),
         create: wrapStandardInput(resolvers.create),
@@ -62,6 +63,7 @@ function createTransformerIn(resolvers, transformIn) {
 
 function createTransformerOut(resolvers, transformOut) {
     return {
+        ...resolvers,
         list,
         find: wrapStandardOutput(resolvers.find),
         create: wrapStandardOutput(resolvers.create),

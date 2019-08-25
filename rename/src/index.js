@@ -2,8 +2,7 @@ module.exports = createTransformer;
 
 function createTransformer(resolvers, transform) {
     const transformIn = Object.fromEntries(
-        Array.from(transform.entries())
-            .map(kv => kv.reverse())
+        Object.entries(transform).map(kv => kv.reverse())
     );
     const transformOut = clone(transform);
     resolvers = createTransformerIn(resolvers, transformIn);

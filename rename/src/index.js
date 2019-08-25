@@ -24,13 +24,13 @@ function createTransformerIn(resolvers, transformIn) {
     function list(source, args, context, info) {
         let clonedArgs;
         // Convert field names
-        if (Array.isArray(args.filter)) {
+        if (Array.isArray(args && args.input && args.input.filter)) {
             clonedArgs = clone(args);
-            clonedArgs.filter.forEach(processNamedEntry);
+            clonedArgs.input.filter.forEach(processNamedEntry);
         }
-        if (Array.isArray(args.order)) {
+        if (Array.isArray(args && args.input && args.input.order)) {
             clonedArgs = clonedArgs || clone(args);
-            clonedArgs.order.forEach(processNamedEntry);
+            clonedArgs.input.order.forEach(processNamedEntry);
         }
         return resolvers.list(source, clonedArgs || args, context, info);
 

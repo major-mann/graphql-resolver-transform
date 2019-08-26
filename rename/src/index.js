@@ -1,25 +1,36 @@
 module.exports = createTransformer;
 
-function createTransformer(resolvers, transform) {
+function createTransformer(resolvers, transform, exclude) {
+    if (!Array.isArray(exclude)) {
+        exclude = [];
+    }
     const transformIn = Object.fromEntries(
         Object.entries(transform).map(kv => kv.reverse())
     );
     const transformOut = clone(transform);
-    resolvers = createTransformerIn(resolvers, transformIn);
-    resolvers = createTransformerOut(resolvers, transformOut);
+    resolvers = createTransformerIn(resolvers, transformIn, exclude);
+    resolvers = createTransformerOut(resolvers, transformOut, exclude);
     return resolvers;
 }
 
-function createTransformerIn(resolvers, transformIn) {
+function createTransformerIn(resolvers, transformIn, exclude) {
+    const entries = Object.entries(resolvers)
+        .filter(entry => !exclude.includes(entry[0]))
+        .map(wrapEntry);
+
     return {
         ...resolvers,
-        list,
-        find: wrapStandardInput(resolvers.find),
-        create: wrapStandardInput(resolvers.create),
-        upsert: wrapStandardInput(resolvers.upsert),
-        update: wrapStandardInput(resolvers.update),
-        delete: wrapStandardInput(resolvers.delete)
+        ...Object.fromEntries(entries)
     };
+
+    function wrapEntry(entry) {
+        if (entry[0] === `list`) {
+            return [`list`, list];
+        } else {
+            const wrapped = wrapStandardInput(resolvers[entry[0]]);
+            return [entry[0], wrapped];
+        }
+    }
 
     function list(source, args, context, info) {
         let clonedArgs;
@@ -61,16 +72,24 @@ function createTransformerIn(resolvers, transformIn) {
     }
 }
 
-function createTransformerOut(resolvers, transformOut) {
+function createTransformerOut(resolvers, transformOut, exclude) {
+    const entries = Object.entries(resolvers)
+        .filter(entry => !exclude.includes(entry[0]))
+        .map(wrapEntry);
+
     return {
         ...resolvers,
-        list,
-        find: wrapStandardOutput(resolvers.find),
-        create: wrapStandardOutput(resolvers.create),
-        upsert: wrapStandardOutput(resolvers.upsert),
-        update: wrapStandardOutput(resolvers.update),
-        delete: wrapStandardOutput(resolvers.delete)
+        ...Object.fromEntries(entries)
     };
+
+    function wrapEntry(entry) {
+        if (entry[0] === `list`) {
+            return [`list`, list];
+        } else {
+            const wrapped = wrapStandardOutput(resolvers[entry[0]]);
+            return [entry[0], wrapped];
+        }
+    }
 
     async function list(source, args, context, info) {
         const result = await resolvers.list(

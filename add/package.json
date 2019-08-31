@@ -1,0 +1,8 @@
+{
+  "name": "@major-mann/graphql-resolver-transform-add",
+  "version": "0.0.1",
+  "description": "Adds fields on inputs and outputs on the standard resolver pattern",
+  "main": "src/index.js",
+  "author": "Calvin Mann <calvinmann+npm@gmail.com>",
+  "license": "MIT"
+}

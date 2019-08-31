@@ -1,6 +1,6 @@
-module.exports = createTransformer;
+module.exports = createRenameTransformer;
 
-function createTransformer(resolvers, transform, exclude) {
+function createRenameTransformer(resolvers, transform, exclude) {
     if (!Array.isArray(exclude)) {
         exclude = [];
     }

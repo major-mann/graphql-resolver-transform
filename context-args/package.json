@@ -1,0 +1,8 @@
+{
+  "name": "@major-mann/graphql-resolver-transform-context-args",
+  "version": "0.0.1",
+  "description": "Copies any arguments from context.args into the resolver execution",
+  "main": "src/index.js",
+  "author": "Calvin Mann <calvinmann+npm@gmail.com>",
+  "license": "MIT"
+}

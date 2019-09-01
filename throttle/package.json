@@ -1,0 +1,8 @@
+{
+  "name": "@major-mann/graphql-resolver-transform-throttle",
+  "version": "0.0.1",
+  "description": "Throttles calls to resolvers",
+  "main": "src/index.js",
+  "author": "Calvin Mann <calvinmann+npm@gmail.com>",
+  "license": "MIT"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@major-mann/graphql-resolver-transform-lookup",
+  "version": "0.0.1",
+  "description": "Takes a field value and replaces it with the result of a lookup using the original",
+  "main": "src/index.js",
+  "author": "Calvin Mann <calvinmann+npm@gmail.com>",
+  "license": "MIT"
+}

@@ -59,21 +59,21 @@ function createTransformerIn(resolvers, transformIn, exclude) {
     }
 
     function wrapStandardInput(resolver) {
-        return (source, args, context, info) => resolver(
+        return async (source, args, context, info) => resolver(
             source,
-            convertInput(args),
+            await convertInput(source, args, context, info),
             context,
             info
         );
     }
 
-    function convertInput(args) {
+    async function convertInput(source, args, context, info) {
         if (!args || !args.input) {
             return args;
         }
         return args && {
             ...args,
-            input: convert(args.input, transformIn)
+            input: await convert({ value: args.input, transform: transformIn, source, context, info })
         };
     }
 }
@@ -110,7 +110,13 @@ function createTransformerOut(resolvers, transformOut, exclude) {
                 result.edges.map(
                     async edge => ({
                         ...edge,
-                        node: await convert(edge.node, transformOut)
+                        node: await convert({
+                            value: edge.node,
+                            transform: transformOut,
+                            source,
+                            context,
+                            info
+                        })
                     })
                 )
             )
@@ -125,19 +131,24 @@ function createTransformerOut(resolvers, transformOut, exclude) {
                 context,
                 info
             );
-            return convert(result, transformOut);
+            return convert({ value: result, transform: transformOut, source, context, info });
         };
     }
 }
 
-async function convert(value, transform) {
+async function convert({ value, transform, source, context, info }) {
     if (!value || typeof value !==`object`) {
         return value;
     }
     value = clone(value);
     await Promise.all(Object.keys(transform).map(async key => {
         if (Object.hasOwnProperty.call(value, key)) {
-            value[key] = await transform[key](value[key]);
+            value[key] = await transform[key](
+                source,
+                { input: { value: value[key] } },
+                context,
+                info
+            );
         }
     }));
     return value;
